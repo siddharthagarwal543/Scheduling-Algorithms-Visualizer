@@ -1,5 +1,5 @@
-from algorithms import *
-import second_screen
+from single_algorithms import *
+import single_second_screen
 import json
 algos = {
     '1': first_come_first_serve,

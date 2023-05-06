@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-import third_screen
+import single_third_screen
 import json
 
 prcs = None
@@ -65,7 +65,7 @@ def sec_main():
             data_f.write(json.dumps(data_lst))
             data_f.close()
             root.destroy()
-            third_screen.main()
+            single_third_screen.main()
 
             return
 

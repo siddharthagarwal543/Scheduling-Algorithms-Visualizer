@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-import second_screen
+import single_second_screen
 
 
 def main():
@@ -8,7 +8,7 @@ def main():
     #App Styling
     root.title("Scheduling Algorithm Visualizer")
     root.geometry('500x350+550+200')
-    root.resizable(0, 0)
+    root.resizable(1, 1)
     Tops = Frame(root, height=50, bd=8, relief="raise")
     Tops.pack(side=TOP)
     Label(Tops, font=('arial', 20, 'bold'),
@@ -26,7 +26,7 @@ def main():
         f.write(selection)
         f.close()
         root.destroy()
-        second_screen.sec_main()
+        single_second_screen.sec_main()
 
     v = IntVar()
     f1 = Frame(root, height=10, width=10, bd=4, relief="ridge")

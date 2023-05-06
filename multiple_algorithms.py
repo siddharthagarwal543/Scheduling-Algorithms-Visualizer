@@ -1,3 +1,5 @@
+import pandas as pd
+import matplotlib.pyplot as plt
 def avg_wt_tat(data):
     for dct in data:
         dct['tat'] = dct['ct'] - dct['at']
@@ -20,18 +22,16 @@ def first_come_first_serve(data):
     curr_time = 0
     lst=[]
     for val in arrival_time:
+        time=0
         if data[val[2]]['at'] > curr_time:
             curr_time += data[val[2]]['at'] - curr_time
+            time=data[val[2]]['at'] - curr_time
         curr_time += data[val[2]]['bt']
         data[val[2]]['ct'] = curr_time
-        lst.append([curr_time,val[3]])
-    cht = "|"
-    tm = "0"
-    for i in lst:
-        cht += i[0]//2*'_' + str(i[1]) + i[0]//2*'_' + '|'  #i[0]=current slice completion time,i[1]=id of current slice process
-        tm += " "*(i[0]+len(i[1])) + str(i[0])
-    print(cht)
-    print(tm)  
+        lst.append([curr_time-data[val[2]]['bt'],val[3],data[val[2]]['bt']])
+    # df=pd.DataFrame(lst)
+    # plt.barh(y=df[1], width=df[2], left=df[0])
+    # plt.show()
     return data
 
 
@@ -55,28 +55,29 @@ def round_robin(data, tq):
     while count!=len(data):
         for i in range(len(rr)):
             bt = rr[i][1]
+            time=0
             if bt != 0 and rr[i][0] <= curr_time or curr_time == 0:
                 temp=[]#details of current slice
                 if bt > tq:
                     rr[i][1] -= tq
                     curr_time += tq
+                    time=tq
                 else:
                     rr[i][1] = 0
                     curr_time += bt
                     data[rr[i][2]]['ct'] = curr_time
                     count+=1
-                temp.append(curr_time)
+                    time=bt
+                temp.append(curr_time-time)
                 temp.append(rr[i][3]) #taking id of current process
+                temp.append(time)
                 lst.append(temp)
+
             if count==len(data):
                 break
-    cht = "|"
-    tm = "0"
-    for i in lst:
-        cht += i[0]//2*'_' + str(i[1]) + i[0]//2*'_' + '|'  #i[0]=current slice completion time,i[1]=id of current slice process
-        tm += " "*(i[0]+len(i[1])) + str(i[0])
-    print(cht)
-    print(tm)  
+    # df=pd.DataFrame(lst)
+    # plt.barh(y=df[1], width=df[2], left=df[0])
+    # plt.show()
     return data
 
 
@@ -95,14 +96,10 @@ def shortest_job_first(data):
                 curr_time += data[val[2]]['bt']
                 data[val[2]]['ct'] = curr_time
                 sjf.remove(val) 
-                lst.append([curr_time,val[3]])
-    cht = "|"
-    tm = "0"
-    for i in lst:
-        cht += i[0]//2*'_' + str(i[1]) + i[0]//2*'_' + '|'  #i[0]=current slice completion time,i[1]=id of current slice process
-        tm += " "*(i[0]+len(i[1])) + str(i[0])
-    print(cht)
-    print(tm)  
+                lst.append([curr_time-data[val[2]]['bt'],val[3],data[val[2]]['bt']])
+    # df=pd.DataFrame(lst)
+    # plt.barh(y=df[1], width=df[2], left=df[0])
+    # plt.show()
     return data
 
 
@@ -142,14 +139,10 @@ def shortest_remaining_time(data):
             srtf, is_done = reduce_bt(index, srtf)
             if is_done:
                 data[index]['ct'] = curr_time
-            lst.append([curr_time,data[index]['id']])
-    cht = "|"
-    tm = "0"
-    for i in lst:
-        cht += i[0]//2*'_' + str(i[1]) + i[0]//2*'_' + '|'  #i[0]=current slice completion time,i[1]=id of current slice process
-        tm += " "*(i[0]+len(i[1])) + str(i[0])
-    print(cht)
-    print(tm)  
+            lst.append([curr_time-1,data[index]['id']])
+    # df=pd.DataFrame(lst)
+    # plt.barh(y=df[1], width=1, left=df[0])
+    # plt.show()
     return data
 
 #AT not working
@@ -165,14 +158,10 @@ def priority_non_preemptive(data):
     for val in prior:
         curr_time += val[2]
         data[val[-2]]['ct'] = curr_time
-        lst.append([curr_time,val[-1]])
-    cht = "|"
-    tm = "0"
-    for i in lst:
-        cht += i[0]//2*'_' + str(i[1]) + i[0]//2*'_' + '|'  #i[0]=current slice completion time,i[1]=id of current slice process
-        tm += " "*(i[0]+len(i[1])) + str(i[0])
-    print(cht)
-    print(tm) 
+        lst.append([curr_time-val[2],val[-1],val[2]])
+    # df=pd.DataFrame(lst)
+    # plt.barh(y=df[1], width=df[2], left=df[0])
+    # plt.show() 
     return data
 
 
@@ -212,12 +201,4 @@ def priority_preemptive(data):
             prior, is_done = reduce_bt(index, prior)
             if is_done:
                 data[index]['ct'] = curr_time
-        lst.append([curr_time,data[index]['id']])
-    cht = "|"
-    tm = "0"
-    for i in lst:
-        cht += i[0]//2*'_' + str(i[1]) + i[0]//2*'_' + '|'  #i[0]=current slice completion time,i[1]=id of current slice process
-        tm += " "*(i[0]+len(i[1])) + str(i[0])
-    print(cht)
-    print(tm) 
     return data
